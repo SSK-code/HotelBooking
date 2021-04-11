@@ -1,5 +1,8 @@
 # HotelBooking
 
+# Swagger Url
+http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
+
 Used h2 database.
  
 At the start of the application it will insert below records<br/>
