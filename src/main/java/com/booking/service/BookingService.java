@@ -53,6 +53,12 @@ public class BookingService {
 				hotel.setUser(user);
 			}
 		} else {
+
+			if (hotel.getUser().equals(user)) {
+				throw new InputDataValidationException("User with userId " + user.getUserId()
+						+ " already booked the hotel having status as " + hotel.getStatus());
+			}
+
 			if (PENDING_APPROVAL.equals(hotel.getStatus()) && user.getBonusPoint() >= hotel.getPrice()) {
 				user.setBonusPoint(user.getBonusPoint() - hotel.getPrice());
 				hotel.setStatus(BOOKED);
