@@ -3,12 +3,14 @@ package com.booking.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.booking.dto.BookingDto;
+import com.booking.dto.UserDto;
 import com.booking.entity.Hotel;
 import com.booking.service.BookingService;
 
@@ -37,6 +39,13 @@ public class BookingController {
 		Hotel hotelBooked = bookingService.bookHotelByUerId(userId, booking);
 
 		return new ResponseEntity<>(hotelBooked, HttpStatus.CREATED);
+	}
+
+	@PatchMapping(path = "/hotels/users/{userId}")
+	@Operation(summary = "Update users bonus points and booking", description = "Returns a updated Hotel")
+	public Hotel updateUser(@PathVariable Long userId, @RequestBody UserDto user) {
+
+		return bookingService.updateBooking(userId, user);
 	}
 
 //	@GetMapping(path = "/hotels/book/{userId}")

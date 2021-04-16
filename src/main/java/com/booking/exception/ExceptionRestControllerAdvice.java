@@ -2,6 +2,8 @@ package com.booking.exception;
 
 import java.time.Instant;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +17,18 @@ public class ExceptionRestControllerAdvice {
 	@ResponseStatus(value = HttpStatus.NOT_FOUND)
 	public ExceptionResponseMessage handleResourceNotFoundException(RuntimeException ex) {
 		return sendResponse(HttpStatus.NOT_FOUND, ex);
+	}
+
+	@ExceptionHandler({ InputDataValidationException.class })
+	@ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+	public ExceptionResponseMessage handleInvalidInputDataException(RuntimeException ex) {
+		return sendResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex);
+	}
+
+	@ExceptionHandler({ ConstraintViolationException.class })
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ExceptionResponseMessage handleBadRequest(RuntimeException ex) {
+		return sendResponse(HttpStatus.BAD_REQUEST, ex);
 	}
 
 	private ExceptionResponseMessage sendResponse(HttpStatus status, RuntimeException ex) {
