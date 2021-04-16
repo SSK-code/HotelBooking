@@ -21,6 +21,9 @@ import com.booking.repository.UserRepository;
 @Validated
 public class BookingService {
 
+	private static final String BOOKED = "BOOKED";
+	private static final String PENDING_APPROVAL = "PENDING APPROVAL";
+
 	@Autowired
 	private UserService userService;
 
@@ -43,16 +46,16 @@ public class BookingService {
 		if (hotel.getUser() == null) {
 			if (user.getBonusPoint() >= hotel.getPrice()) {
 				user.setBonusPoint(user.getBonusPoint() - hotel.getPrice());
-				hotel.setStatus("BOOKED");
+				hotel.setStatus(BOOKED);
 				hotel.setUser(user);
 			} else {
-				hotel.setStatus("PENDING APPROVAL");
+				hotel.setStatus(PENDING_APPROVAL);
 				hotel.setUser(user);
 			}
 		} else {
-			if (user.getBonusPoint() >= hotel.getPrice()) {
+			if (PENDING_APPROVAL.equals(hotel.getStatus()) && user.getBonusPoint() >= hotel.getPrice()) {
 				user.setBonusPoint(user.getBonusPoint() - hotel.getPrice());
-				hotel.setStatus("BOOKED");
+				hotel.setStatus(BOOKED);
 				hotel.setUser(user);
 			}
 		}
@@ -80,8 +83,8 @@ public class BookingService {
 		Hotel hotel = hotelRepository.findByUserUserId(userId)
 				.orElseThrow(() -> new InputDataValidationException("Hotel is not found with userId " + userId));
 
-		if ("PENDING APPROVAL".equals(hotel.getStatus()) && user.getBonusPoint() >= hotel.getPrice()) {
-			hotel.setStatus("BOOKED");
+		if (PENDING_APPROVAL.equals(hotel.getStatus()) && user.getBonusPoint() >= hotel.getPrice()) {
+			hotel.setStatus(BOOKED);
 			user.setBonusPoint(user.getBonusPoint() - hotel.getPrice());
 		}
 
